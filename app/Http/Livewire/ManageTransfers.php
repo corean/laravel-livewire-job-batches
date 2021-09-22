@@ -14,6 +14,21 @@ class ManageTransfers extends Component
 
     public $pendingFiles = [];
 
+    public function getListeners()
+    {
+        $userId = auth()->id();
+
+        return [
+            "echo-private:notifications.{$userId},FileTransferredToCloud" => '$refresh',
+            "echo-private:notifications.{$userId},TransferCompleted" => 'fireConfettiCannon',
+        ];
+    }
+
+    public function fireConfettiCannon()
+    {
+        $this->emit('confetti');
+    }
+
     public function initiateTransfer()
     {
         $this->validate([

@@ -10,8 +10,9 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Log;
 
-class FileTransferedToCloud
+class FileTransferedToCloud implements  ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -35,6 +36,7 @@ class FileTransferedToCloud
      */
     public function broadcastOn(): PrivateChannel
     {
-        return new PrivateChannel('channel-name');
+        // Log::info(__CLASS__.'::'.__METHOD__);
+        return new PrivateChannel("notifications.{$this->file->transfer->user_id}");
     }
 }

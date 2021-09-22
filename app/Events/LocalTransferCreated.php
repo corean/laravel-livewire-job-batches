@@ -8,6 +8,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Log;
 
 class LocalTransferCreated implements ShouldBroadcast
 {
@@ -25,7 +26,7 @@ class LocalTransferCreated implements ShouldBroadcast
         $this->transfer = $transfer;
     }
 
-    public function getTransfer() : Transfer
+    public function getTransfer(): Transfer
     {
         return $this->transfer;
     }
@@ -37,6 +38,6 @@ class LocalTransferCreated implements ShouldBroadcast
      */
     public function broadcastOn(): PrivateChannel
     {
-        return new PrivateChannel('channel-name');
+        return new PrivateChannel("notifications.{$this->transfer->user_id}");
     }
 }

@@ -10,7 +10,7 @@
       </th>
     </tr>
     </thead>
-    <tbody class="bg-white divide-y divide-gray-200"
+    <tbody class="bg-white divide-y divide-gray-200">
     @forelse($transfers as $transfer)
       <tr class="bg-white">
         @if(is_null($transfer->jobBatch))
@@ -75,8 +75,9 @@
           You have no transfers. Create a batch on the right 👉🏻
         </td>
       </tr>
-      @endforelse
-      </tbody>
+    @endforelse
+
+    </tbody>
   </table>
 
 
@@ -96,8 +97,7 @@
     <div>
       <div>
         @forelse($pendingFiles as $pendingFile)
-          <img src="{{ $pendingFile->temporaryUrl() }}"
-               alt="">
+          {{--<img src="{{ $pendingFile->temporaryUrl() }}" alt="">--}}
         @empty
           <p>No files selected</p>
         @endforelse

@@ -8,6 +8,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Log;
 
 class TransferCompleted implements ShouldBroadcast
 {
@@ -35,6 +36,7 @@ class TransferCompleted implements ShouldBroadcast
      */
     public function broadcastOn(): PrivateChannel
     {
-        return new PrivateChannel('channel-name');
+        // Log::info(__CLASS__.'::'.__METHOD__);
+        return new PrivateChannel("notifications.{$this->transfer->user_id}");
     }
 }

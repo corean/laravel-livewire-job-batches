@@ -38,9 +38,9 @@ class TransferLocalFileToCloud implements ShouldQueue
      */
     public function handle()
     {
-        Log::info($localPath = $this->file->path);
+        // Log::info($localPath = $this->file->path);
         sleep(1);
-        Storage::delete(explode('/app/', $localPath)[1]);
+        // Storage::delete(explode('/app/', $localPath)[1]);
 
         FileTransferedToCloud::dispatch($this->file);
     }
