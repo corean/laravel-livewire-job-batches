@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Events\LocalTransferCreated;
 use App\Models\TransferFile;
 use Livewire\Component;
 use Livewire\TemporaryUploadedFile;
