@@ -10,47 +10,73 @@
       </th>
     </tr>
     </thead>
-    <tbody class="bg-white divide-y divide-gray-200">
-    <tr>
-      <td class="px-6 py-4 whitespace-nowrap">√</td>
-      <td class="px-6 py-4 whitespace-nowrap">Uploaded</td>
-      <td class="px-6 py-4 whitespace-nowrap">d9cbb5a7-ea12-42b4-9fb3-3e5a7f10631f</td>
-      <td class="px-6 py-4 whitespace-nowrap">2MB</td>
-    </tr>
-    <tr>
-      <td class="px-6 py-4 whitespace-nowrap">X</td>
-      <td class="px-6 py-4 whitespace-nowrap">Finished with errors</td>
-      <td class="px-6 py-4 whitespace-nowrap">0d669854-fb2c-480f-ae04-8572ec695242</td>
-      <td class="px-6 py-4 whitespace-nowrap">0MB</td>
-    </tr>
-    <tr>
-      <td class="px-6 py-4 whitespace-nowrap">!!</td>
-      <td class="px-6 py-4 whitespace-nowrap">Failed</td>
-      <td class="px-6 py-4 whitespace-nowrap">e176a925-8534-446f-a1f6-3fc2e06fcb0f</td>
-      <td class="px-6 py-4 whitespace-nowrap">0MB</td>
-    </tr>
-    <tr>
-      <td class="px-6 py-4 whitespace-nowrap">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-          <circle stroke-width="4"></circle>
-          <path
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-      </td>
-      <td class="px-6 py-4 whitespace-nowrap">
-        <div class="flex h-2 overflow-hidden rounded bg-gray-50">
-          <div style="transform: scale({{ 50 / 100 }}, 1)"
-               class="bg-indigo-500 transition-transform origin-left duration-200 ease-in-out w-full shadow-none flex flex-col"></div>
-        </div>
-      </td>
-      <td class="px-6 py-4 whitespace-nowrap">
-        296fc64e-af31-401d-9895-3d18ce02931c
-      </td>
-      <td class="px-6 py-4 whitespace-nowrap">
-        0MB
-      </td>
-    </tr>
-    </tbody>
+    <tbody class="bg-white divide-y divide-gray-200"
+    @forelse($transfers as $transfer)
+      <tr class="bg-white">
+        @if(is_null($transfer->jobBatch))
+
+          <td>
+            %
+          </td>
+          <td>
+            <div class="flex h-2 overflow-hidden rounded bg-gray-50">
+              <div style="transform: scale(0, 1)"
+                   class="bg-indigo-500 transition-transform origin-left duration-200 ease-in-out w-full shadow-none flex flex-col"></div>
+            </div>
+          </td>
+        @elseif($transfer->jobBatch->hasPendingJobs())
+          <td>
+            %
+          </td>
+          <td>
+            <div class="flex h-2 overflow-hidden rounded bg-gray-50">
+              <div style="transform: scale({{ $transfer->jobBatch->progress() / 100 }}, 1)"
+                   class="bg-indigo-500 transition-transform origin-left duration-200 ease-in-out w-full shadow-none flex flex-col"></div>
+            </div>
+          </td>
+
+        @elseif($transfer->jobBatch->finished() and $transfer->jobBatch->failed())
+
+          <td>
+            X
+          </td>
+          <td>
+            Failed
+          </td>
+
+        @elseif($transfer->jobBatch->finished() and $transfer->jobBatch->hasFailures())
+
+          <td>
+            !!
+          </td>
+          <td>
+            Finished with errors
+          </td>
+
+        @elseif($transfer->jobBatch->finished())
+
+          <td>
+            √
+          </td>
+          <td>
+            Uploaded
+          </td>
+        @endif
+        <td>
+          {{ $transfer->batch_id }}
+        </td>
+        <td>
+          {{-- combined file size of transfer files --}}
+        </td>
+      </tr>
+    @empty
+      <tr>
+        <td colspan="4">
+          You have no transfers. Create a batch on the right 👉🏻
+        </td>
+      </tr>
+      @endforelse
+      </tbody>
   </table>
 
 
@@ -59,7 +85,7 @@
     <p>Select the files you want to upload.</p>
 
     <div class="form-control">
-      <input id="files" wire:model="pendingFiles"  name="files" type="file" multiple wire class="border w-full">
+      <input id="files" wire:model="pendingFiles" name="files" type="file" multiple wire class="border w-full">
     </div>
 
     <div class="bor">
